@@ -12,5 +12,5 @@ import br.com.starwars.api.domain.Planeta;
 public interface PlanetaRepository extends MongoRepository<Planeta, String> {
 
 	@Transactional(readOnly = true)
-	Optional<Planeta> findByName(String nome);
+	Optional<Planeta> findByNome(String nome);
 }
