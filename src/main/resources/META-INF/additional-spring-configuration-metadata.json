@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "api.publica.starwars.url",
+      "type": "java.lang.String",
+      "description": "URL base da API publica do Star Wars."
+    }
+  ]
+}
