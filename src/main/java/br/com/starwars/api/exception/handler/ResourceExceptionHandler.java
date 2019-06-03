@@ -1,16 +1,15 @@
 package br.com.starwars.api.exception.handler;
 
-import br.com.starwars.api.exception.PlanetaNaoEncontradoException;
-import org.springframework.http.HttpHeaders;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpClientErrorException;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.stream.Collectors;
+import br.com.starwars.api.exception.PlanetaNaoEncontradoException;
 
 @ControllerAdvice
 public class ResourceExceptionHandler {
@@ -34,6 +33,18 @@ public class ResourceExceptionHandler {
         e.getBindingResult().getFieldErrors()
                 .forEach(erro -> erros.addErros(erro.getField(), erro.getDefaultMessage()));
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(erros);
+    }
+    
+    @ExceptionHandler(HttpClientErrorException.class)
+    public ResponseEntity<MensagemErroPadrao> httpClientError(HttpClientErrorException e, HttpServletRequest request) {
+    	MensagemErroPadrao msg = MensagemErroPadrao.builder()
+                .timestamp(System.currentTimeMillis())
+                .status(HttpStatus.NOT_FOUND.value())
+                .erro("Recurso não encontrada")
+                .mensagem("Recurso não encontrado na API pública do Star Wars.")
+                .caminho(request.getRequestURI())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg);
     }
 
 }
