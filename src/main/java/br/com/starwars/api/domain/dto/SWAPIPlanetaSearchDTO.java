@@ -12,9 +12,9 @@ import java.util.List;
 public class SWAPIPlanetaSearchDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @JsonProperty("nome")
+    @JsonProperty("name")
     private String nome;
 
-    @JsonProperty("filmes")
+    @JsonProperty("films")
     private List<String> filmes;
 }
