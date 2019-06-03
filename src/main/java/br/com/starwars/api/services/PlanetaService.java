@@ -34,7 +34,7 @@ public class PlanetaService {
                 .orElseThrow(() -> new PlanetaNaoEncontradoException("Planeta "+nomePlaneta+ " não encontrado."));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Planeta inserir(Planeta planeta) {
         return repos.insert(planeta);
     }

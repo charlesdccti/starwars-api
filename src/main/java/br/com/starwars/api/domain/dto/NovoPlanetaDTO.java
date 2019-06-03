@@ -17,6 +17,6 @@ public class NovoPlanetaDTO implements Serializable {
     @NotEmpty(message = "Terreno do planeta é obrigatório")
     private String terreno;
 
-    @NotEmpty(message = "Clime do planeta é obrigatório")
+    @NotEmpty(message = "Clima do planeta é obrigatório")
     private String clima;
 }
