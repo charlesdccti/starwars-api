@@ -42,4 +42,19 @@ public class SWAPIService {
 		
 		return response.getBody();
 	}
+	
+	public SWAPISearchDTO buscarPlanetas(int pagina) {
+		URI uri = UriComponentsBuilder.fromHttpUrl(swapiUrl)
+			.path("/planets/")
+			.queryParam("page", pagina)
+			.build().toUri();
+		
+		RequestEntity<Void> request = RequestEntity.get(uri)
+				.accept(MediaType.APPLICATION_JSON).build();
+		
+		ResponseEntity<SWAPISearchDTO> response = restTemplate
+				.exchange(request, new ParameterizedTypeReference<SWAPISearchDTO>() {});
+		
+		return response.getBody();
+	}
 }
