@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Getter;
@@ -24,6 +25,10 @@ public class Planeta implements Serializable {
 
 	@Getter @Setter
 	private String clima;
+
+	@Transient
+	@Getter @Setter
+	private int quantidadeDeAparicoes;
 
 	public Planeta() {
 	}
