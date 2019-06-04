@@ -2,6 +2,8 @@ package br.com.starwars.api.exception.handler;
 
 import javax.servlet.http.HttpServletRequest;
 
+import br.com.starwars.api.exception.PlanetaComNomeDuplicadoException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -45,6 +47,18 @@ public class ResourceExceptionHandler {
                 .caminho(request.getRequestURI())
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg);
+    }
+
+    @ExceptionHandler(PlanetaComNomeDuplicadoException.class)
+    public ResponseEntity<MensagemErroPadrao> planetaComNomeDuplicado(PlanetaComNomeDuplicadoException e, HttpServletRequest request) {
+        MensagemErroPadrao msg = MensagemErroPadrao.builder()
+                .timestamp(System.currentTimeMillis())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .erro("Integridade de dados")
+                .mensagem(e.getMessage())
+                .caminho(request.getRequestURI())
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
     }
 
 }
