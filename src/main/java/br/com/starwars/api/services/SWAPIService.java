@@ -1,7 +1,6 @@
 package br.com.starwars.api.services;
 
-import java.net.URI;
-
+import br.com.starwars.api.domain.dto.SWAPISearchDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -12,7 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.starwars.api.domain.dto.SWAPISearchDTO;
+import java.net.URI;
+import java.util.Map;
 
 
 @Service
@@ -34,27 +34,31 @@ public class SWAPIService {
 			.queryParam("search", nome)
 			.build().toUri();
 		
-		RequestEntity<Void> request = RequestEntity.get(uri)
-				.accept(MediaType.APPLICATION_JSON).build();
-		
-		ResponseEntity<SWAPISearchDTO> response = restTemplate
-				.exchange(request, new ParameterizedTypeReference<SWAPISearchDTO>() {});
-		
-		return response.getBody();
+		return buscarDadosSWAPI(uri, new ParameterizedTypeReference<SWAPISearchDTO>() {});
 	}
 	
-	public SWAPISearchDTO buscarPlanetas(int pagina) {
+	public Map<String, Object> buscarPlanetas(int pagina) {
 		URI uri = UriComponentsBuilder.fromHttpUrl(swapiUrl)
 			.path("/planets/")
 			.queryParam("page", pagina)
 			.build().toUri();
 		
+		return buscarDadosSWAPI(uri, new ParameterizedTypeReference<Map<String, Object>>() {});
+	}
+
+	public Map<String, Object> buscarPlanetaPorId(int planetaId) {
+		URI uri = UriComponentsBuilder.fromHttpUrl(swapiUrl)
+				.path("/planets/{planetaId}/")
+				.buildAndExpand(planetaId)
+				.toUri();
+
+		return buscarDadosSWAPI(uri, new ParameterizedTypeReference<Map<String, Object>>() {});
+	}
+
+	private <T> T buscarDadosSWAPI(URI uri, ParameterizedTypeReference<T> typeReference) {
 		RequestEntity<Void> request = RequestEntity.get(uri)
 				.accept(MediaType.APPLICATION_JSON).build();
-		
-		ResponseEntity<SWAPISearchDTO> response = restTemplate
-				.exchange(request, new ParameterizedTypeReference<SWAPISearchDTO>() {});
-		
+		ResponseEntity<T> response = restTemplate.exchange(request,typeReference);
 		return response.getBody();
 	}
 }
