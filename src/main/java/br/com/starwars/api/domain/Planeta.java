@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Getter;
@@ -13,9 +14,11 @@ import lombok.Setter;
 public class Planeta implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Indexed
 	@Id @Getter
 	private String id;
 
+	@Indexed(unique=true)
 	@Getter @Setter
 	private String nome;
 
