@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SWAPIPlanetaSearchDTO implements Serializable {
+public class SWAPIPlanetaFilmesSearchDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @JsonProperty("name")

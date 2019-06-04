@@ -16,5 +16,5 @@ public class SWAPISearchDTO implements Serializable {
     private int count;
 
     @JsonProperty("results")
-    private List<SWAPIPlanetaSearchDTO> results;
+    private List<SWAPIPlanetaFilmesSearchDTO> results;
 }
