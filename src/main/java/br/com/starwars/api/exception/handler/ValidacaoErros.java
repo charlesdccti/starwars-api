@@ -1,6 +1,5 @@
 package br.com.starwars.api.exception.handler;
 
-import lombok.Builder;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -13,8 +12,9 @@ public class ValidacaoErros extends MensagemErroPadrao {
     @Getter
     private List<MensagemErroCampos> erros = new ArrayList<>();
 
-    public ValidacaoErros(Long timestamp, Integer status, String erro, String mensagem, String caminho) {
-        super(timestamp, status, erro, mensagem, caminho);
+    public ValidacaoErros(Long timestamp, Integer status, String erro, 
+    		String mensagem, String caminho, String exception) {
+        super(timestamp, status, erro, mensagem, caminho, exception);
     }
 
     public void addErros(String campo, String mensagem) {

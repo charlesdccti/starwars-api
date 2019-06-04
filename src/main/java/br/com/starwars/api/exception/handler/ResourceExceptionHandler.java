@@ -2,15 +2,15 @@ package br.com.starwars.api.exception.handler;
 
 import javax.servlet.http.HttpServletRequest;
 
-import br.com.starwars.api.exception.PlanetaComNomeDuplicadoException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 
+import br.com.starwars.api.exception.PlanetaComNomeDuplicadoException;
 import br.com.starwars.api.exception.PlanetaNaoEncontradoException;
 
 @ControllerAdvice
@@ -24,6 +24,7 @@ public class ResourceExceptionHandler {
                 .erro("Planeta não encontrado")
                 .mensagem(e.getMessage())
                 .caminho(request.getRequestURI())
+                .exception(e.getClass().getName())
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg);
     }
@@ -31,7 +32,7 @@ public class ResourceExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<MensagemErroPadrao> methodArgumentNotValid(MethodArgumentNotValidException e, HttpServletRequest request) {
         ValidacaoErros erros = new ValidacaoErros(System.currentTimeMillis(), HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                "Erro de validação", "Erro de validação de campos", request.getRequestURI());
+                "Erro de validação", "Erro de validação de campos", request.getRequestURI(), e.getClass().getName());
         e.getBindingResult().getFieldErrors()
                 .forEach(erro -> erros.addErros(erro.getField(), erro.getDefaultMessage()));
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(erros);
@@ -45,6 +46,7 @@ public class ResourceExceptionHandler {
                 .erro("Recurso não encontrada")
                 .mensagem("Recurso não encontrado na API pública do Star Wars.")
                 .caminho(request.getRequestURI())
+                .exception(e.getClass().getName())
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg);
     }
@@ -57,8 +59,21 @@ public class ResourceExceptionHandler {
                 .erro("Integridade de dados")
                 .mensagem(e.getMessage())
                 .caminho(request.getRequestURI())
+                .exception(e.getClass().getName())
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
     }
-
+    
+    @ExceptionHandler(ResourceAccessException.class)
+    public ResponseEntity<MensagemErroPadrao>  resourceAccessException(ResourceAccessException e, HttpServletRequest request) {
+        MensagemErroPadrao msg = MensagemErroPadrao.builder()
+                .timestamp(System.currentTimeMillis())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .erro("Connection refused")
+                .mensagem(e.getMessage())
+                .caminho(request.getRequestURI())
+                .exception(e.getClass().getName())
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
+    }
 }

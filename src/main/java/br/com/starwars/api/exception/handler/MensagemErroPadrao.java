@@ -15,13 +15,15 @@ public class MensagemErroPadrao implements Serializable {
     private String erro;
     private String mensagem;
     private String caminho;
+    private String exception;
 
     public MensagemErroPadrao(Long timestamp, Integer status, String erro,
-                              String mensagem, String caminho) {
+                              String mensagem, String caminho, String exception) {
         this.timestamp = timestamp;
         this.status = status;
         this.erro = erro;
         this.mensagem = mensagem;
         this.caminho = caminho;
+        this.exception = exception;
     }
 }
