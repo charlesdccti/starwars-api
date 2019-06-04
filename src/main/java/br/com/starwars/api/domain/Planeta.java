@@ -26,7 +26,7 @@ public class Planeta implements Serializable {
 	private String clima;
 
 	@Getter @Setter
-	private int quantidadeDeAparicoes;
+	private int aparicoesEmFilmes;
 
 	public Planeta() {
 	}
