@@ -1,11 +1,7 @@
-.mvn/
-.git/
-.gitignore
-.dockerignore
+.*
 docker-compose.yml
 Dockerfile
 *.md
-mvnw
-mvnw.cmd
+mvnw*
 !README.md
-/target/
+mongo-data
