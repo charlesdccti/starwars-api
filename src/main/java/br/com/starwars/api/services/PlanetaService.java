@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PlanetaService {
@@ -44,6 +45,11 @@ public class PlanetaService {
     @Transactional(rollbackFor = Exception.class)
     public Planeta inserir(Planeta planeta) {
         try {
+            Optional<Planeta> planetaOpt = repos.findByNome(planeta.getNome());
+            if (planetaOpt.isPresent()) {
+                throw new DuplicateKeyException("");
+            }
+
             planeta.setAparicoesEmFilmes(quantidadeDeAparicoes(planeta.getNome()));
             return repos.insert(planeta);
         } catch (DuplicateKeyException e) {
