@@ -1,8 +1,10 @@
 package br.com.starwars.api.services;
 
+import br.com.starwars.api.config.cache.SWAPICacheConfig;
 import br.com.starwars.api.domain.dto.SWAPISearchDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -14,6 +16,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.Map;
 
+/**
+ * Serviço responsável por acessar a API pública
+ * do Star Wars para obter dados sobre os planetas
+ * dos filmes.
+ * 
+ * https://swapi.co/
+ * */
 
 @Service
 public class SWAPIService {
@@ -22,7 +31,7 @@ public class SWAPIService {
 	private String swapiUrl;
 	
 	private final RestTemplate restTemplate;
-
+	
 	@Autowired
 	public SWAPIService(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
@@ -37,6 +46,7 @@ public class SWAPIService {
 		return buscarDadosSWAPI(uri, new ParameterizedTypeReference<SWAPISearchDTO>() {});
 	}
 	
+	@Cacheable(value = SWAPICacheConfig.PLANETAS_POR_PAGINA, unless = "#result == null")
 	public Map<String, Object> buscarPlanetas(int pagina) {
 		URI uri = UriComponentsBuilder.fromHttpUrl(swapiUrl)
 			.path("/planets/")
@@ -46,6 +56,7 @@ public class SWAPIService {
 		return buscarDadosSWAPI(uri, new ParameterizedTypeReference<Map<String, Object>>() {});
 	}
 
+	@Cacheable(value = SWAPICacheConfig.PLANETAS_POR_ID, unless = "#result == null")
 	public Map<String, Object> buscarPlanetaPorId(int planetaId) {
 		URI uri = UriComponentsBuilder.fromHttpUrl(swapiUrl)
 				.path("/planets/{planetaId}/")
