@@ -44,17 +44,13 @@ public class PlanetaService {
 
     @Transactional(rollbackFor = Exception.class)
     public Planeta inserir(Planeta planeta) {
-        try {
-            Optional<Planeta> planetaOpt = repos.findByNome(planeta.getNome());
-            if (planetaOpt.isPresent()) {
-                throw new DuplicateKeyException("");
-            }
-
-            planeta.setAparicoesEmFilmes(quantidadeDeAparicoes(planeta.getNome()));
-            return repos.insert(planeta);
-        } catch (DuplicateKeyException e) {
+        Optional<Planeta> planetaOpt = repos.findByNome(planeta.getNome());
+        if (planetaOpt.isPresent()) {
             throw new PlanetaComNomeDuplicadoException("Não é possível cadastrar planetas com o mesmo nome.");
         }
+
+        planeta.setAparicoesEmFilmes(quantidadeDeAparicoes(planeta.getNome()));
+        return repos.insert(planeta);
     }
 
     public void remover(String planetaId) {
