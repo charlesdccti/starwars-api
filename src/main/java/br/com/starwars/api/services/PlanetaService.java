@@ -1,5 +1,6 @@
 package br.com.starwars.api.services;
 
+import br.com.starwars.api.config.cache.SWAPICacheConfig;
 import br.com.starwars.api.domain.Planeta;
 import br.com.starwars.api.domain.dto.NovoPlanetaDTO;
 import br.com.starwars.api.domain.dto.SWAPIPlanetaFilmesSearchDTO;
@@ -8,7 +9,7 @@ import br.com.starwars.api.exception.PlanetaComNomeDuplicadoException;
 import br.com.starwars.api.exception.PlanetaNaoEncontradoException;
 import br.com.starwars.api.repository.PlanetaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -32,11 +33,13 @@ public class PlanetaService {
         return repos.findAll();
     }
 
+    @Cacheable(value = SWAPICacheConfig.PLANETA_ID, unless = "#result == null")
     public Planeta findById(String planetaId) {
         return repos.findById(planetaId)
                 .orElseThrow(() -> new PlanetaNaoEncontradoException("Planeta com id: "+planetaId+" não encontrado."));
     }
 
+    @Cacheable(value = SWAPICacheConfig.NOME_PLANETA, unless = "#result == null")
     public Planeta findByNome(String nomePlaneta) {
         return repos.findByNome(StringUtils.capitalize(nomePlaneta))
                 .orElseThrow(() -> new PlanetaNaoEncontradoException("Planeta "+nomePlaneta+ " não encontrado."));

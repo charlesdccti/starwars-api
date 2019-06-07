@@ -13,13 +13,16 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 @Configuration
 public class SWAPICacheConfig {
 	
-	public static final String PLANETAS_POR_ID = "PLANETAS_POR_ID";
-	public static final String PLANETAS_POR_PAGINA = "PLANETAS_POR_PAGINA";
+	public static final String PLANETAS_POR_ID_SWAPI = "PLANETAS_POR_ID";
+	public static final String PLANETAS_POR_PAGINA_SWAPI = "PLANETAS_POR_PAGINA";
+	public static final String NOME_PLANETA = "NOME_PLANETA";
+	public static final String PLANETA_ID = "PLANETA_ID";
 	
 	@Bean
 	@Primary
 	public CacheManager cacheManager() {
-		CaffeineCacheManager cacheManager = new CaffeineCacheManager(PLANETAS_POR_ID, PLANETAS_POR_PAGINA);
+		CaffeineCacheManager cacheManager = new CaffeineCacheManager(PLANETAS_POR_ID_SWAPI, 
+				PLANETAS_POR_PAGINA_SWAPI, NOME_PLANETA, PLANETA_ID);
 		cacheManager.setAllowNullValues(false);
 		cacheManager.setCaffeine(caffeineCacheBuilder());
 		return cacheManager;
