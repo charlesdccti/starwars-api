@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 
 import br.com.starwars.api.exception.PlanetaComNomeDuplicadoException;
@@ -50,6 +51,19 @@ public class ResourceExceptionHandler {
                 .exception(e.getClass().getName())
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg);
+    }
+    
+    @ExceptionHandler(HttpServerErrorException.class)
+    public ResponseEntity<MensagemErroPadrao> serviceUnavailable(HttpServerErrorException e, HttpServletRequest request) {
+    	MensagemErroPadrao msg = MensagemErroPadrao.builder()
+                .timestamp(System.currentTimeMillis())
+                .status(HttpStatus.SERVICE_UNAVAILABLE.value())
+                .erro("Serviço indisponível")
+                .mensagem("Recurso indisponível na API pública do Star Wars.")
+                .caminho(request.getRequestURI())
+                .exception(e.getClass().getName())
+                .build();
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(msg);
     }
 
     @ExceptionHandler(PlanetaComNomeDuplicadoException.class)
