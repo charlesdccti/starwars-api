@@ -1,11 +1,16 @@
 package br.com.starwars.api.services;
 
-import br.com.starwars.api.StarwarsApiApplication;
-import br.com.starwars.api.domain.Planeta;
-import br.com.starwars.api.exception.PlanetaComNomeDuplicadoException;
-import br.com.starwars.api.exception.PlanetaNaoEncontradoException;
-import br.com.starwars.api.repository.PlanetaRepository;
-import junit.framework.TestCase;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.not;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.Before;
@@ -14,22 +19,16 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.not;
-import static org.mockito.Mockito.*;
+import br.com.starwars.api.StarwarsApiApplication;
+import br.com.starwars.api.domain.Planeta;
+import br.com.starwars.api.exception.PlanetaComNomeDuplicadoException;
+import br.com.starwars.api.exception.PlanetaNaoEncontradoException;
+import br.com.starwars.api.repository.PlanetaRepository;
 
 @AutoConfigureMockMvc
 @RunWith(SpringRunner.class)
@@ -138,9 +137,9 @@ public class PlanetaServiceTest {
 
     @Test
     public void deveBuscarOPlanetaPeloNomeELancarUmaExceptionDePlanetaNaoEncontrado() {
-        expectedException.expect(PlanetaNaoEncontradoException.class);
-        expectedException.expectMessage("Planeta "+NOME+" não encontrado.");
-        service.findByNome(NOME);
+    	expectedException.expect(PlanetaNaoEncontradoException.class);
+	    expectedException.expectMessage("Planeta Naboo não encontrado.");
+        service.findByNome("Naboo");
     }
 
     @Test
