@@ -171,7 +171,7 @@ public class PlanetaResourceTest extends StarwarsApiApplicationTests {
 			.assertThat()
 			.statusCode(BAD_REQUEST.value())
 			.body("status", equalTo(BAD_REQUEST.value()), 
-				  "erro", equalTo("Integridade de dados"),
+				  "erro", equalTo("Nome Duplicado"),
 				  "mensagem", equalTo("Não é possível cadastrar planetas com o mesmo nome."),
 				  "caminho", equalTo("/api/v1/planetas"),
 				  "exception", equalTo("br.com.starwars.api.exception.PlanetaComNomeDuplicadoException"));

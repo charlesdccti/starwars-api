@@ -1,28 +1,39 @@
 package br.com.starwars.api.services;
 
+import br.com.starwars.api.StarwarsApiApplication;
 import br.com.starwars.api.domain.Planeta;
 import br.com.starwars.api.exception.PlanetaComNomeDuplicadoException;
 import br.com.starwars.api.exception.PlanetaNaoEncontradoException;
 import br.com.starwars.api.repository.PlanetaRepository;
+import junit.framework.TestCase;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.*;
-import static org.assertj.core.api.Assertions.*;
 
 @AutoConfigureMockMvc
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = { StarwarsApiApplication.class })
 public class PlanetaServiceTest {
 
     @MockBean
@@ -40,7 +51,7 @@ public class PlanetaServiceTest {
     private static final String NOME = "Dagobah";
     private static final String TERRENO = "swamp, jungles";
     private static final String CLIMA = "murky";
-
+    private static final Integer APARICOES = 3;
 
     @Before
     public void setUp() throws Exception {
@@ -52,8 +63,15 @@ public class PlanetaServiceTest {
 
     @Test
     public void deveSalvarUmPlanetaNoBanco() {
-        service.inserir(planeta);
+        when(repository.insert(planeta)).thenReturn(planeta);
+        Planeta planetaTest = service.inserir(planeta);
         verify(repository).insert(planeta);
+
+        assertThat(planetaTest.getId()).isNotEmpty();
+        assertThat(planetaTest.getNome()).isEqualTo(NOME);
+        assertThat(planetaTest.getTerreno()).isEqualTo(TERRENO);
+        assertThat(planetaTest.getClima()).isEqualTo(CLIMA);
+        assertThat(planetaTest.getAparicoesEmFilmes()).isEqualTo(APARICOES);
     }
 
     @Test
@@ -115,6 +133,7 @@ public class PlanetaServiceTest {
         assertThat(planetaTest.getNome()).isEqualTo(NOME);
         assertThat(planetaTest.getTerreno()).isEqualTo(TERRENO);
         assertThat(planetaTest.getClima()).isEqualTo(CLIMA);
+        assertThat(planetaTest.getAparicoesEmFilmes()).isNotNegative();
     }
 
     @Test
@@ -141,5 +160,27 @@ public class PlanetaServiceTest {
         expectedException.expect(PlanetaNaoEncontradoException.class);
         expectedException.expectMessage("Planeta com id: "+ID+" não encontrado.");
         service.findById(ID);
+    }
+
+    @Test
+    public void deveRetornarONumeroDeAparicoesEmFilmes() {
+        Integer aparicoes = service.quantidadeDeAparicoes(NOME);
+        assertThat(aparicoes).isEqualTo(3);
+    }
+
+    @Test
+    public void deveRetornarUmaListaComTodosOsPlanetas() {
+        Planeta jakku = new Planeta("Jakku", "unknown", "unknown");
+        jakku.setId("5cf70fa4410df8002ea42sw4");
+        when(repository.findAll()).thenReturn(Arrays.asList(planeta, jakku));
+        List<Planeta> planetasTest = service.findAll();
+        MatcherAssert.assertThat(planetasTest, not(IsEmptyCollection.empty()));
+    }
+
+    @Test
+    public void deveRetornarUmaListaDePlanetasVazia() {
+        when(repository.findAll()).thenReturn(Collections.emptyList());
+        List<Planeta> planetasTest = service.findAll();
+        MatcherAssert.assertThat(planetasTest, IsEmptyCollection.empty());
     }
 }
