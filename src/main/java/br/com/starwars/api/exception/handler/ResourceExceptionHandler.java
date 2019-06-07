@@ -2,6 +2,7 @@ package br.com.starwars.api.exception.handler;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -43,7 +44,7 @@ public class ResourceExceptionHandler {
     	MensagemErroPadrao msg = MensagemErroPadrao.builder()
                 .timestamp(System.currentTimeMillis())
                 .status(HttpStatus.NOT_FOUND.value())
-                .erro("Recurso não encontrada")
+                .erro("Recurso não encontrado")
                 .mensagem("Recurso não encontrado na API pública do Star Wars.")
                 .caminho(request.getRequestURI())
                 .exception(e.getClass().getName())
@@ -56,7 +57,7 @@ public class ResourceExceptionHandler {
         MensagemErroPadrao msg = MensagemErroPadrao.builder()
                 .timestamp(System.currentTimeMillis())
                 .status(HttpStatus.BAD_REQUEST.value())
-                .erro("Integridade de dados")
+                .erro("Nome Duplicado")
                 .mensagem(e.getMessage())
                 .caminho(request.getRequestURI())
                 .exception(e.getClass().getName())
@@ -71,6 +72,19 @@ public class ResourceExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST.value())
                 .erro("Connection refused")
                 .mensagem(e.getMessage())
+                .caminho(request.getRequestURI())
+                .exception(e.getClass().getName())
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
+    }
+
+    @ExceptionHandler(DuplicateKeyException.class)
+    public ResponseEntity<MensagemErroPadrao>  resourceAccessException(DuplicateKeyException e, HttpServletRequest request) {
+        MensagemErroPadrao msg = MensagemErroPadrao.builder()
+                .timestamp(System.currentTimeMillis())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .erro("Integridade de dados")
+                .mensagem("Não é possível inserir informações duplicadas.")
                 .caminho(request.getRequestURI())
                 .exception(e.getClass().getName())
                 .build();
