@@ -21,7 +21,12 @@ informações sobre os filmes da franquia Star Wars.
     - A API demora alguns segundos para inicializar, para acompanhar a inicialização da aplicação 
     execute o comando ```docker logs -f starwars-api-app``` 
     para ver o log de inicialização da API.
-- Com o container e a aplicação inicializados, acesse ```http://localhost:8080/api/v1/planetas``` para verificar se a API retornou `[]`.
+    - A aplicação estará inicializada quando o log exibir:
+    ```
+    : Tomcat started on port(s): 8080 (http) with context path ''
+    : Started StarwarsApiApplication in 7.09 seconds (JVM running for 8.069)
+    ```
+- Com  a aplicação inicializada, acesse ```http://localhost:8080/api/v1/planetas``` ou ```http://localhost:8080/swapi/planetas``` para ter acesso aos recursos.
 
 ## Documentação API
 
