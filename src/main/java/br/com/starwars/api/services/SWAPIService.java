@@ -46,7 +46,7 @@ public class SWAPIService {
 		return buscarDadosSWAPI(uri, new ParameterizedTypeReference<SWAPISearchDTO>() {});
 	}
 	
-	@Cacheable(value = SWAPICacheConfig.PLANETAS_POR_PAGINA, unless = "#result == null")
+	@Cacheable(value = SWAPICacheConfig.PLANETAS_POR_PAGINA_SWAPI, unless = "#result == null")
 	public Map<String, Object> buscarPlanetas(int pagina) {
 		URI uri = UriComponentsBuilder.fromHttpUrl(swapiUrl)
 			.path("/planets/")
@@ -56,7 +56,7 @@ public class SWAPIService {
 		return buscarDadosSWAPI(uri, new ParameterizedTypeReference<Map<String, Object>>() {});
 	}
 
-	@Cacheable(value = SWAPICacheConfig.PLANETAS_POR_ID, unless = "#result == null")
+	@Cacheable(value = SWAPICacheConfig.PLANETAS_POR_ID_SWAPI, unless = "#result == null")
 	public Map<String, Object> buscarPlanetaPorId(int planetaId) {
 		URI uri = UriComponentsBuilder.fromHttpUrl(swapiUrl)
 				.path("/planets/{planetaId}/")
