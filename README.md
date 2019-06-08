@@ -192,4 +192,4 @@ informações sobre os filmes da franquia Star Wars.
     /api/v1/planetas/5cfa4db50274390026f1f636
   ```
 
-Para mais detalhes sobre a API, acesse `http://localhost:8080/swagger-ui.html` quando a aplicação estiver inicialidada.
+Para mais detalhes sobre a API, acesse `http://localhost:8080/swagger-ui.html` quando a aplicação estiver inicializada.
