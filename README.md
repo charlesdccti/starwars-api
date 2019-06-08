@@ -30,8 +30,6 @@ informações sobre os filmes da franquia Star Wars.
 
 ## Documentação API
 
-A API disponibiliza recursos para inserção e busca de planetas para serem consumidos.
-
 - [GET]
   - /api/v1/planetas - Retorna todos os planetas
   ```
