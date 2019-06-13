@@ -132,7 +132,7 @@ public class PlanetaServiceTest {
         assertThat(planetaTest.getNome()).isEqualTo(NOME);
         assertThat(planetaTest.getTerreno()).isEqualTo(TERRENO);
         assertThat(planetaTest.getClima()).isEqualTo(CLIMA);
-        assertThat(planetaTest.getAparicoesEmFilmes()).isNotNegative();
+        assertThat(planetaTest.getAparicoesEmFilmes()).isGreaterThanOrEqualTo(0);
     }
 
     @Test
@@ -152,6 +152,7 @@ public class PlanetaServiceTest {
         assertThat(planetaTest.getNome()).isEqualTo(NOME);
         assertThat(planetaTest.getTerreno()).isEqualTo(TERRENO);
         assertThat(planetaTest.getClima()).isEqualTo(CLIMA);
+        assertThat(planetaTest.getAparicoesEmFilmes()).isGreaterThanOrEqualTo(0);
     }
 
     @Test
@@ -164,6 +165,8 @@ public class PlanetaServiceTest {
     @Test
     public void deveRetornarONumeroDeAparicoesEmFilmes() {
         Integer aparicoes = service.quantidadeDeAparicoes(NOME);
+        assertThat(aparicoes).isNotNegative();
+        assertThat(aparicoes).isGreaterThanOrEqualTo(0);
         assertThat(aparicoes).isEqualTo(3);
     }
 
